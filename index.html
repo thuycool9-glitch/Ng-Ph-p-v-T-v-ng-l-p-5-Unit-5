@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ENGLISH ADVENTURE – UNIT 5</title>
+<style>
+:root{--ink:#17325c;--sky:#dff3ff;--blue:#1f7ae0;--sun:#ffc93c;--ok:#1fa85a;--bad:#e5484d;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#bfe6ff,#fff3c9);min-height:100vh}
+.scr{display:none;max-width:860px;margin:0 auto;padding:14px}.scr.on{display:block}
+button{font:inherit;cursor:pointer;border:0}
+.btn{background:var(--blue);color:#fff;border-radius:14px;padding:14px 22px;font-weight:700;font-size:1.05rem;box-shadow:0 4px 0 #14529c;margin:5px}
+.btn.sun{background:var(--sun);color:var(--ink);box-shadow:0 4px 0 #c9971a}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 #b9cde0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.hero{text-align:center;padding:26px 10px}
+.hero h1{font-size:clamp(2rem,7vw,3.4rem);margin:8px 0;letter-spacing:1px;color:var(--blue);text-shadow:3px 3px 0 #fff}
+.hero .jobs{font-size:clamp(2.2rem,9vw,4rem);display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.hero .jobs span{animation:bob 2.4s ease-in-out infinite}
+.hero .jobs span:nth-child(2n){animation-delay:.6s}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.pill{display:inline-block;background:var(--sun);border-radius:99px;padding:6px 18px;font-weight:700}
+.hud{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 3px 10px #0002}
+.hud b{font-size:1.1rem}
+.bar{height:12px;background:#d6e6f5;border-radius:9px;overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4cc9f0,#1fa85a);transition:width .4s}
+.rt{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.rt button{flex:1;min-width:112px;background:#fff;border-radius:12px;padding:8px;font-size:.85rem;font-weight:700;color:var(--ink)}
+.rt button.on{background:var(--blue);color:#fff}
+.card{background:var(--card);border-radius:20px;padding:18px;margin-top:10px;box-shadow:0 6px 18px #0002}
+.tag{font-size:.85rem;color:#5a7396;font-weight:700}
+.img{font-size:clamp(3.5rem,16vw,6rem);text-align:center;line-height:1.1;margin:6px 0}
+.q{font-size:clamp(1.15rem,4vw,1.5rem);font-weight:700;margin:8px 0 14px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#f1f7ff;border:3px solid #cfe1f5;border-radius:14px;padding:13px;margin:8px 0;font-size:1.1rem;color:var(--ink)}
+.opt b{background:var(--blue);color:#fff;border-radius:50%;min-width:30px;height:30px;display:grid;place-items:center}
+.opt.sel{border-color:var(--blue);background:#dcecff}
+.opt.right{border-color:var(--ok);background:#dff7e8}.opt.wrong{border-color:var(--bad);background:#fde5e6}
+.opt.dis{opacity:.35;pointer-events:none}
+.ans{min-height:58px;border:3px dashed #9db9d6;border-radius:14px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tok{background:var(--sun);border-radius:10px;padding:10px 14px;font-weight:700;font-size:1.05rem;box-shadow:0 3px 0 #c9971a;color:var(--ink)}
+.ans .tok{background:#cfe8ff;box-shadow:0 3px 0 #8bb8e8}
+.fb{display:none;border-radius:14px;padding:12px 14px;margin-top:12px;font-weight:700}
+.fb.ok{display:block;background:#dff7e8;color:#0d6b37;animation:pop .35s}
+.fb.no{display:block;background:#fde5e6;color:#a1232a;animation:pop .35s}
+.fb small{display:block;font-weight:400;margin-top:4px;color:var(--ink);font-size:1rem}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.row{display:flex;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.ov{position:fixed;inset:0;background:#0b2a5acc;display:none;place-items:center;z-index:20;padding:16px}.ov.on{display:grid}
+.ov div{background:#fff;border-radius:20px;padding:22px;max-width:480px;text-align:center}
+.ov li{text-align:left;margin:6px 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:99px;padding:10px 20px;z-index:30;display:none}
+.fall{position:fixed;top:-30px;font-size:1.8rem;z-index:25;pointer-events:none;animation:fall 1.6s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.big{font-size:clamp(2rem,8vw,3.2rem);font-weight:900;text-align:center;margin:6px 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+.stats div{background:#f1f7ff;border-radius:14px;padding:12px;text-align:center}.stats b{display:block;font-size:1.5rem}
+.rv{border-left:6px solid var(--ok);background:#fff;border-radius:12px;padding:10px 12px;margin:8px 0}
+.rv.x{border-color:var(--bad);background:#fff4f4}
+.rv small{display:block;margin-top:3px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+
+<section id="s-start" class="scr on"><div class="hero">
+<div class="jobs"><span>👩‍⚕️</span><span>👩‍🏫</span><span>🧑‍🚒</span><span>🎙️</span><span>🧑‍🌾</span><span>✍️</span></div>
+<h1>ENGLISH ADVENTURE – UNIT 5</h1>
+<p class="pill">Grade 5 – Unit 5</p>
+<p style="font-size:1.1rem">What would you like to be in the future?</p>
+<button class="btn sun" onclick="begin()">▶ START GAME</button>
+<button class="btn ghost" onclick="ov('how',1)">❓ How to play</button>
+</div></section>
+
+<section id="s-game" class="scr">
+<div class="hud"><b id="qn"></b><b>⭐ <span id="sc">0</span></b><b>⏱ <span id="time">00:00</span></b>
+<span><button class="btn ghost" style="padding:6px 12px;margin:0" onclick="pause()">⏸ Pause</button>
+<button class="btn ghost" style="padding:6px 12px;margin:0" onclick="ov('how',1)">❓</button></span></div>
+<div class="bar"><i id="pg"></i></div>
+<div class="rt" id="rt"></div>
+<div class="card"><div class="tag" id="tag"></div><div class="img" id="img"></div><div class="q" id="q"></div><div id="body"></div>
+<div class="fb" id="fb"></div></div>
+<div class="row">
+<button class="btn ghost" id="bSay" onclick="say()">🔊 Listen</button>
+<button class="btn ghost" id="bHint" onclick="hint()">💡 Hint</button>
+<button class="btn ghost" id="bRe" onclick="render()">↺ Reset</button>
+<button class="btn sun" id="bChk" onclick="check()">✔ CHECK</button>
+<button class="btn" id="bNext" onclick="next()">NEXT ➜</button></div>
+</section>
+
+<section id="s-end" class="scr"><div class="card">
+<div class="big" id="grade"></div><div style="text-align:center;font-size:1.1rem" id="cmt"></div>
+<div class="big" style="color:var(--blue)">⭐ <span id="eScore"></span>/1000</div>
+<div class="stats" id="stats"></div>
+<div class="row"><button class="btn sun" onclick="begin()">🔁 PLAY AGAIN</button><button class="btn" onclick="review()">📖 REVIEW ANSWERS</button></div>
+</div></section>
+
+<section id="s-rev" class="scr"><div class="row"><button class="btn ghost" onclick="show('s-end')">⬅ Back to results</button></div><div id="rvList"></div></section>
+
+<div class="ov" id="how"><div><h2>How to play</h2><ol>
+<li>Read each question and choose the answer (or tap words/letters to build it).</li>
+<li>Press <b>CHECK</b>. Correct = 10 points.</li>
+<li>Use 🔊 to listen, 💡 for a hint, ↺ to reset your answer.</li>
+<li>You can switch rounds at the top. Finish all 100 questions to see your result!</li></ol>
+<button class="btn" onclick="ov('how',0)">Got it!</button></div></div>
+<div class="ov" id="pz"><div><h2>⏸ Paused</h2><button class="btn" onclick="pause()">▶ Continue</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const sh=a=>{a=[...a];for(let i=a.length;i--;){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const M=(q,a,w,e,i)=>({t:'m',q,a,o:[a,...w],e,i});
+const O=a=>({t:'o',q:'Sắp xếp các từ thành câu hoàn chỉnh:',a,tok:a.split(' '),e:'Câu đúng: '+a});
+const L=(a,i)=>({t:'l',q:'Sắp xếp các chữ cái thành từ đúng:',a,tok:a.split(''),i,e:'Từ đúng là "'+a+'".'});
+const DR='👩‍⚕️',TE='👩‍🏫',FF='🧑‍🚒',RP='🎙️',GA='🧑‍🌾',WR='✍️';
+const RN=['Từ vựng','Hình ảnh','Ngữ pháp','Hoàn thành câu','Tổng hợp'];
+const R=[[
+M('Từ nào có nghĩa là "bác sĩ"?','doctor',['teacher','writer','gardener'],'doctor = bác sĩ.'),
+M('Từ nào có nghĩa là "giáo viên"?','teacher',['doctor','reporter','firefighter'],'teacher = giáo viên.'),
+M('Từ nào có nghĩa là "lính cứu hỏa"?','firefighter',['gardener','writer','teacher'],'firefighter = lính cứu hỏa.'),
+M('Từ nào có nghĩa là "phóng viên"?','reporter',['writer','doctor','gardener'],'reporter = phóng viên.'),
+M('Từ nào có nghĩa là "người làm vườn"?','gardener',['firefighter','teacher','reporter'],'gardener = người làm vườn.'),
+M('Từ nào có nghĩa là "nhà văn"?','writer',['reporter','doctor','teacher'],'writer = nhà văn.'),
+M('"future" nghĩa là gì?','tương lai',['công việc','bông hoa','cây trồng'],'future = tương lai.'),
+M('"job" nghĩa là gì?','công việc',['tương lai','thú vị','bác sĩ'],'job = công việc.'),
+M('"interesting" nghĩa là gì?','thú vị',['buồn chán','nhanh nhẹn','mệt mỏi'],'interesting = thú vị.'),
+M('"flower" nghĩa là gì?','hoa',['cây','truyện','tin tức'],'flower = hoa.'),
+M('"plant" (động từ) nghĩa là gì?','trồng cây',['dạy học','viết truyện','đưa tin'],'plant = cây / trồng cây.'),
+M('"help people" nghĩa là gì?','giúp đỡ mọi người',['dạy những đứa trẻ','trồng hoa','đưa tin tức'],'help people = giúp đỡ mọi người.'),
+M('"teach children" nghĩa là gì?','dạy những đứa trẻ',['giúp đỡ mọi người','viết truyện','trồng hoa'],'teach children = dạy những đứa trẻ.'),
+M('"report the news" nghĩa là gì?','đưa tin tức',['trồng hoa','đọc truyện','chăm sóc'],'report the news = đưa tin tức.'),
+M('"grow flowers" nghĩa là gì?','trồng hoa',['hái hoa','viết truyện','giúp đỡ mọi người'],'grow flowers = trồng hoa.'),
+M('"write stories" nghĩa là gì?','viết những câu truyện',['đọc những câu truyện','đưa tin tức','dạy học'],'write stories = viết truyện; reading stories = đọc truyện.'),
+M('"do a survey" nghĩa là gì?','làm cuộc khảo sát',['chăm sóc','trồng cây','đưa tin'],'do a survey = làm cuộc khảo sát.'),
+M('"take care of" nghĩa là gì?','chăm sóc',['làm khảo sát','giúp đỡ','dạy dỗ'],'take care of = chăm sóc.'),
+M('"reading stories" nghĩa là gì?','đọc những câu truyện',['viết những câu truyện','trồng hoa','đưa tin tức'],'reading stories = đọc những câu truyện.'),
+M('Which word is NOT a job?','flower',['doctor','teacher','writer'],'doctor, teacher, writer là nghề nghiệp; flower là hoa.')
+],[
+M('What job is this?','doctor',['teacher','writer','reporter'],'Bác sĩ = doctor.',DR),
+M('What job is this?','teacher',['doctor','gardener','firefighter'],'Giáo viên = teacher.',TE),
+M('What job is this?','firefighter',['reporter','doctor','writer'],'Lính cứu hỏa = firefighter.',FF),
+M('What job is this?','reporter',['teacher','gardener','firefighter'],'Phóng viên = reporter.',RP),
+M('What job is this?','gardener',['writer','doctor','reporter'],'Người làm vườn = gardener.',GA),
+M('What job is this?','writer',['gardener','teacher','firefighter'],'Nhà văn = writer.',WR),
+M('What is this?','flower',['plant','job','future'],'Bông hoa = flower.','🌸'),
+M('What is this?','plant',['flower','doctor','survey'],'Cây = plant.','🌱'),
+M('Which phrase matches the picture?','help people',['teach children','grow flowers','write stories'],'Giúp đỡ mọi người = help people.','🤝🧑‍🤝‍🧑'),
+M('Which phrase matches the picture?','teach children',['help people','report the news','grow flowers'],'Dạy những đứa trẻ = teach children.','🧒👧📚'),
+M('Which phrase matches the picture?','report the news',['write stories','teach children','help people'],'Đưa tin tức = report the news.','📺🗞️'),
+M('Which phrase matches the picture?','grow flowers',['report the news','write stories','help people'],'Trồng hoa = grow flowers.','🌷🌱'),
+M('Which phrase matches the picture?','write stories',['grow flowers','teach children','report the news'],'Viết truyện = write stories.','📝📖'),
+M('Which phrase matches the picture?','reading stories',['writing stories','growing flowers','helping people'],'Đọc truyện = reading stories.','🧒📖'),
+M('Which phrase matches the picture?','do a survey',['take care of','grow flowers','report the news'],'Làm khảo sát = do a survey.','📋✅'),
+M('Which phrase matches the picture?','take care of',['do a survey','write stories','teach children'],'Chăm sóc = take care of.','🐶🤲'),
+M('A doctor would like to ___.','help people',['grow flowers','teach children','write stories'],'Bác sĩ muốn giúp đỡ mọi người.',DR),
+M('A gardener would like to ___.','grow flowers',['help people','report the news','teach children'],'Người làm vườn muốn trồng hoa.',GA),
+M('A writer would like to ___.','write stories',['grow flowers','help people','report the news'],'Nhà văn muốn viết truyện.',WR),
+M('A reporter would like to ___.','report the news',['write stories','grow flowers','teach children'],'Phóng viên muốn đưa tin tức.',RP)
+],[
+M('___ would you like to be in the future?','What',['Why','Where','Who'],'Hỏi nghề nghiệp mong muốn dùng What.'),
+M('___ would you like to be a doctor?','Why',['What','Where','How'],'Hỏi lý do dùng Why.'),
+M('I ___ like to be a teacher.','would',['am','do','does'],'Cấu trúc: would like to be.'),
+M('She ___ like to be a doctor.','would',['woulds','is','does'],'would không thêm s; She would like to be...'),
+M('Which sentence is correct?','I\'d like to be a doctor.',['I\'d like to be an doctor.','I\'d like to be a teachers.','I like be a doctor.'],'doctor bắt đầu bằng phụ âm nên dùng "a".'),
+M('He\'d like to be ___ firefighter.','a',['an','the','is'],'firefighter bắt đầu bằng phụ âm nên dùng "a".'),
+M('Because I\'d like to ___ people.','help',['helps','helping','helped'],'Sau would like to là động từ nguyên mẫu.'),
+M('Because she\'d like to ___ the news.','report',['reports','reporting','reporter'],'Sau would like to dùng động từ nguyên mẫu: report.'),
+M('Because he\'d like to ___ children.','teach',['teaches','teaching','teacher'],'would like to + V nguyên mẫu: teach.'),
+M('What would he like to be in the future?','He\'d like to be a firefighter.',['I\'d like to be a firefighter.','Because he\'d like to help people.','He is a firefighter now.'],'Chủ ngữ he nên trả lời He\'d like to be...'),
+M('Which question is correct?','What would you like to be in the future?',['What do you would like to be in the future?','What would you likes to be in the future?','Why would you like to be in the future?'],'Cấu trúc: What would + S + like to be...?'),
+M('"I\'d" is short for ___.','I would',['I had','I did','I do'],'I\'d = I would.'),
+M('Why would she like to be a reporter?','Because she\'d like to report the news.',['She\'d like to be a reporter.','Because I\'d like to report the news.','Because she\'d like to reports the news.'],'Câu hỏi Why trả lời bằng Because; chủ ngữ she.'),
+M('Why would you like to be a gardener?','Because I\'d like to grow flowers.',['I\'d like to be a gardener.','Because I\'d like to teach children.','What would you like to be?'],'Người làm vườn trồng hoa: grow flowers.'),
+M('Which sentence is correct?','She\'d like to be a doctor.',['She\'d likes to be a doctor.','She\'d like be a doctor.','She like to be a doctor.'],'She\'d like to be + a + nghề.'),
+M('"He\'d" is short for ___.','He would',['He had','He does','He is'],'He\'d = He would.'),
+M('What would she like to be in the future?','She\'d like to be a doctor.',['I\'d like to be a doctor.','Because she\'d like to help people.','He\'d like to be a doctor.'],'Chủ ngữ she nên trả lời She\'d like to be...'),
+M('Why would he like to be a teacher?','Because he\'d like to teach children.',['He\'d like to be a teacher.','Because she\'d like to teach children.','Because he\'d like to teaches children.'],'Because + he would like to + V nguyên mẫu.'),
+M('What would you like to ___ in the future?','be',['is','are','being'],'Cấu trúc: would like to be.'),
+M('Why ___ you like to be a writer?','would',['do','does','are'],'Câu hỏi: Why would + S + like to be...?')
+],[
+O('What would you like to be in the future?'),
+O('I\'d like to be a reporter.'),
+O('She\'d like to be a doctor.'),
+O('Why would you like to be a gardener?'),
+O('Because I\'d like to grow flowers.'),
+O('He\'d like to be a firefighter.'),
+O('Because he\'d like to teach children.'),
+O('Why would she like to be a reporter?'),
+L('doctor',DR),L('teacher',TE),L('reporter',RP),L('gardener',GA),
+M('I\'d like to be a ___. I like to write stories.','writer',['doctor','gardener','firefighter'],'Thích viết truyện nên là writer.'),
+M('She\'d like to be a ___ because she\'d like to grow flowers.','gardener',['reporter','teacher','doctor'],'Trồng hoa là việc của gardener.'),
+M('Find the mistake: What would he likes to be in the future?','likes',['What','would','future'],'Sau would dùng like (không thêm s).'),
+M('Find the mistake: Because I\'d like to helps people.','helps',['Because','like','people'],'Sau to dùng động từ nguyên mẫu: help.'),
+M('Find the mistake: "What would you like to be?" - "Because I\'d like to be a teacher."','Because',['What','would','teacher'],'Trả lời câu hỏi What không dùng Because.'),
+M('A: What would he like to be in the future? B: ___','He\'d like to be a firefighter.',['Because he\'d like to be a firefighter.','I\'d like to be a firefighter.','Why would he like to be?'],'Câu hỏi What nên trả lời trực tiếp nghề nghiệp.'),
+M('A: Why would you like to be a teacher? B: ___','Because I\'d like to teach children.',['I\'d like to be a teacher.','What would you like to be?','Because he\'d like to teach children.'],'Câu hỏi Why trả lời bằng Because.'),
+M('A: ___ B: She\'d like to be a writer.','What would she like to be in the future?',['Why would she like to be a writer?','What would he like to be in the future?','What would you like to be in the future?'],'Câu trả lời dùng She nên câu hỏi dùng she.')
+],[
+M('Mai would like to help people. She\'d like to be a ___.','doctor',['writer','gardener','reporter'],'Giúp đỡ mọi người: doctor.',DR),
+M('Nam likes reading and writing stories. He\'d like to be a ___.','writer',['firefighter','doctor','gardener'],'Viết truyện: writer.',WR),
+M('Lan loves flowers. Why would she like to be a gardener?','Because she\'d like to grow flowers.',['Because she\'d like to report the news.','She\'d like to be a gardener.','Because I\'d like to grow flowers.'],'Because + she would like to grow flowers.',GA),
+M('Which is an activity, not a job?','grow flowers',['doctor','teacher','reporter'],'grow flowers là hoạt động.'),
+M('Who would like to teach children?','A teacher',['A doctor','A gardener','A reporter'],'Teach children → teacher.',TE),
+M('Who would like to report the news?','A reporter',['A writer','A teacher','A doctor'],'Report the news → reporter.',RP),
+M('He\'d like to be a ___.','firefighter',['teacher','writer','gardener'],'Hình lính cứu hỏa = firefighter.',FF),
+M('Bạn muốn làm nghề gì trong tương lai?','What would you like to be in the future?',['Why would you like to be in the future?','What do you like to be in the future?','Who would you like to be in the future?'],'Hỏi nghề nghiệp: What would you like to be...?'),
+M('Tại sao bạn muốn làm bác sĩ?','Why would you like to be a doctor?',['What would you like to be a doctor?','Why do you like to be a doctor?','Because I\'d like to be a doctor.'],'Hỏi lý do: Why would you like to be...?'),
+M('Cô ấy muốn trở thành phóng viên.','She\'d like to be a reporter.',['He\'d like to be a reporter.','She\'d like to be a writer.','She\'d like be a reporter.'],'She\'d like to be a reporter.'),
+M('Anh ấy muốn dạy những đứa trẻ.','He\'d like to teach children.',['She\'d like to teach children.','He\'d like to teach teacher.','He like to teaches children.'],'He\'d like to teach children.'),
+M('Mai: Why would you like to be a writer? Nam: Because I\'d like to ___.','write stories',['report the news','grow flowers','teach children'],'Nhà văn muốn viết truyện.',WR),
+M('A gardener takes care of ___.','plants',['patients','the news','stories'],'take care of = chăm sóc; gardener chăm sóc cây.',GA),
+M('A reporter would like to do a ___ about students.','survey',['flower','plant','future'],'do a survey = làm cuộc khảo sát.',RP),
+M('Why would you like to be a writer? Because writing stories is ___.','interesting',['interest','interested','interestings'],'Sau is dùng tính từ: interesting (thú vị).',WR),
+M('What would you like to be in the ___?','future',['past','yesterday','job'],'in the future = trong tương lai.'),
+M('Which sentence is correct?','Because I\'d like to report the news.',['Because I\'d like report the news.','Because I like to reports the news.','Because I\'d liking to report the news.'],'Because + I\'d like to + V nguyên mẫu.'),
+O('Because she\'d like to report the news.'),
+O('What would he like to be in the future?'),
+L('firefighter',FF)
+]];
+let Q,A,cur,sel,placed,sec,tm,paused,score,hinted;
+function show(id){document.querySelectorAll('.scr').forEach(e=>e.classList.remove('on'));$('#'+id).classList.add('on');scrollTo(0,0)}
+function ov(id,on){$('#'+id).classList.toggle('on',!!on)}
+function fmt(s){return String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(e.h);e.h=setTimeout(()=>e.style.display='none',1800)}
+function begin(){
+  Q=[];R.forEach((r,ri)=>r.forEach(q=>{const c={...q,r:ri};if(c.t=='m')c.o=sh(c.o);else{let s;do{s=sh(c.tok)}while(s.join('')==c.tok.join('')&&c.tok.length>1);c.bank=s}Q.push(c)}));
+  A=Array(Q.length).fill(null);cur=0;score=0;sec=0;paused=false;
+  clearInterval(tm);tm=setInterval(()=>{if(!paused){sec++;$('#time').textContent=fmt(sec)}},1000);
+  $('#time').textContent='00:00';ov('pz',0);show('s-game');render()}
+function render(){
+  const q=Q[cur],d=A[cur];sel=null;placed=[];hinted=0;
+  $('#qn').textContent='Question '+(cur+1)+'/'+Q.length;$('#sc').textContent=score;
+  const done=A.filter(Boolean).length;$('#pg').style.width=done+'%';
+  $('#rt').innerHTML=RN.map((n,i)=>`<button class="${i==q.r?'on':''}" onclick="goR(${i})">${i+1}. ${n} (${A.filter((a,k)=>a&&Q[k].r==i).length}/20)</button>`).join('');
+  $('#tag').textContent='Round '+(q.r+1)+' – '+RN[q.r];
+  $('#img').textContent=q.i||'';$('#img').style.display=q.i?'block':'none';
+  $('#q').textContent=q.q;
+  if(q.t=='m')$('#body').innerHTML=q.o.map((o,i)=>`<button class="opt" id="o${i}" onclick="pick(${i})"><b>${'ABCD'[i]}</b><span>${o}</span></button>`).join('');
+  else{$('#body').innerHTML='<div class="ans" id="ans"></div><div class="bank" id="bank"></div>';draw()}
+  const fb=$('#fb');fb.className='fb';
+  if(d){mark();showFb(d.ok)}
+  $('#bChk').disabled=!!d;$('#bHint').disabled=!!d;$('#bRe').disabled=!!d;$('#bNext').disabled=!d;
+  $('#bNext').textContent=A.every(Boolean)?'SEE RESULTS 🏆':'NEXT ➜'}
+function mark(){const q=Q[cur],d=A[cur];
+  if(q.t=='m')q.o.forEach((o,i)=>{const b=$('#o'+i);b.classList.add('dis');b.style.opacity=1;b.style.pointerEvents='none';
+    if(o==q.a)b.classList.add('right');else if(o==d.pk)b.classList.add('wrong')});
+  else{placed=[];draw(d.pk.split(q.t=='o'?' ':''))}}
+function draw(fixed){const q=Q[cur];
+  const a=fixed?fixed.map(t=>`<span class="tok">${t}</span>`):placed.map((p,k)=>`<button class="tok" onclick="unplace(${k})">${q.bank[p]}</button>`);
+  $('#ans').innerHTML=a.join('');
+  $('#bank').innerHTML=fixed?'':q.bank.map((t,i)=>placed.includes(i)?'':`<button class="tok" onclick="place(${i})">${t}</button>`).join('')}
+function place(i){placed.push(i);draw()}
+function unplace(k){placed.splice(k,1);draw()}
+function pick(i){if(A[cur])return;sel=i;Q[cur].o.forEach((o,k)=>$('#o'+k).classList.toggle('sel',k==i))}
+function check(){
+  const q=Q[cur];if(A[cur])return;let pk,ok;
+  if(q.t=='m'){if(sel==null)return toast('Choose an answer first!');pk=q.o[sel]}
+  else{if(placed.length<q.tok.length)return toast('Use all the '+(q.t=='o'?'words':'letters')+' first!');pk=placed.map(i=>q.bank[i]).join(q.t=='o'?' ':'')}
+  ok=pk==q.a;A[cur]={ok,pk};if(ok){score+=10;confetti()}
+  beep(ok);render()}
+function showFb(ok){const q=Q[cur],fb=$('#fb');
+  fb.className='fb '+(ok?'ok':'no');
+  fb.innerHTML=ok?'🌟 EXCELLENT! CORRECT ANSWER!<small>'+q.e+'</small>':'❌ TRY AGAIN!<small>Đáp án đúng: <b>'+q.a+'</b><br>'+q.e+'</small>'}
+function hint(){const q=Q[cur];if(A[cur])return;
+  if(q.t=='m'){const w=q.o.findIndex((o,i)=>o!=q.a&&i!=sel&&!$('#o'+i).classList.contains('dis'));if(w>-1&&hinted<1){$('#o'+w).classList.add('dis');hinted++;toast('One wrong answer removed')}else toast('No more hints')}
+  else toast('Starts with: '+(q.t=='o'?q.tok[0]:q.a[0]))}
+function sayText(t){if(!window.speechSynthesis)return toast('Your browser cannot read aloud');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}
+function say(){const q=Q[cur],d=A[cur];if(d)return sayText(q.a);
+  const m=q.q.match(/"([^"]+)"/);if(m)return sayText(m[1]);
+  if(!/[ăâđêôơưàáạảãèéẹẻẽìíịỉĩòóọỏõùúụủũỳýỵỷỹ]/i.test(q.q)&&q.t=='m')return sayText(q.q.replace(/_+/g,'blank'));
+  toast('Listen after you check your answer')}
+function goR(r){cur=Q.findIndex((q,i)=>q.r==r&&!A[i]);if(cur<0)cur=Q.findIndex(q=>q.r==r);render()}
+function next(){if(!A[cur])return;let n=-1;for(let k=1;k<=Q.length;k++){const i=(cur+k)%Q.length;if(!A[i]){n=i;break}}
+  if(n<0)return finish();cur=n;render();scrollTo(0,0)}
+function pause(){paused=!paused;ov('pz',paused)}
+function finish(){
+  clearInterval(tm);const ok=A.filter(a=>a.ok).length,tot=Q.length,pct=Math.round(ok*100/tot);
+  const g=score>=900?['EXCELLENT!','Tuyệt vời! Em nắm rất chắc Unit 5.']:score>=800?['VERY GOOD!','Rất tốt! Chỉ còn vài câu cần ôn lại.']:score>=650?['GOOD!','Tốt lắm! Hãy xem lại các câu sai nhé.']:score>=500?['KEEP PRACTISING!','Cố lên! Ôn lại từ vựng và cấu trúc rồi thử lại.']:['TRY AGAIN!','Đừng nản! Hãy ôn Unit 5 và chơi lại nhé.'];
+  $('#grade').textContent=g[0];$('#cmt').textContent=g[1];$('#eScore').textContent=score;
+  $('#stats').innerHTML=[['Completed',tot],['Correct',ok],['Wrong',tot-ok],['Accuracy',pct+'%'],['Time',fmt(sec)]].map(x=>`<div><b>${x[1]}</b>${x[0]}</div>`).join('');
+  show('s-end');if(score>=500)for(let i=0;i<4;i++)setTimeout(confetti,i*400)}
+function review(){
+  const row=(q,i)=>{const d=A[i];return `<div class="rv ${d.ok?'':'x'}"><b>${d.ok?'✔':'✘'} ${i+1}. ${q.i||''} ${q.q}</b><small>Your answer: ${d.pk}</small><small>Correct: <b>${q.a}</b> – ${q.e}</small></div>`};
+  const w=Q.map((q,i)=>A[i].ok?'':row(q,i)).join('');
+  $('#rvList').innerHTML=(w?'<h2>📌 Questions to practise</h2>'+w:'<h2>🎉 No wrong answers!</h2>')+'<h2>All 100 questions</h2>'+Q.map(row).join('');
+  show('s-rev')}
+function confetti(){for(let i=0;i<22;i++){const s=document.createElement('span');s.className='fall';s.textContent=['⭐','✨','🎉','🌟'][i%4];s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),2200)}}
+let AC;function beep(ok){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const notes=ok?[523,659,784]:[220,196];notes.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=ok?'triangle':'sine';o.frequency.value=f;g.gain.setValueAtTime(.12,AC.currentTime+i*.13);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+i*.13+.2);o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+i*.13);o.stop(AC.currentTime+i*.13+.22)})}catch(e){}}
+</script></body></html>
